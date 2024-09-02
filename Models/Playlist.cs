@@ -5,8 +5,7 @@ using System.Text.Json.Serialization;
 namespace MongoDB.Models;
 
 public class Playlist {
-
-
+    
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }

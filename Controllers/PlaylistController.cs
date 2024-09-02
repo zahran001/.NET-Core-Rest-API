@@ -1,15 +1,15 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Services;
 using MongoDB.Models;
 
 namespace MongoDB.Controllers;
+// We will have to define the endpoint within the controller and do the work within our service.
 
 // The class PlaylistController extends Controller
 
-[Controller]
-[Route("api/[controller]")] 
 // Path for accessing the different endpoint functions for this particular controller class
+[ApiController]
+[Route("api/[controller]")]
 public class PlaylistController: Controller {
     private readonly MongoDBService _mongoDBService;
     // private readonly variable for the MongoDBService to access it locally within this particular controller class  
@@ -23,10 +23,15 @@ public class PlaylistController: Controller {
 
     // returns a Task because it's async
     [HttpGet]
-    public async Task<List<Playlist>> Get() {}
+    public async Task<List<Playlist>> Get() {
+        return await _mongoDBService.GetAsync();
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] Playlist playlist) {}
+    public async Task<IActionResult> Post([FromBody] Playlist playlist) {
+        await _mongoDBService.CreateAsync(playlist);
+        return CreatedAtAction(nameof(Get), new { id = playlist.Id } , playlist);
+    }
 
     // Put is common for update operations 
     // We want to find which document we want to update
@@ -38,9 +43,15 @@ public class PlaylistController: Controller {
 
     // route parameter
     [HttpPut("{id}")]
-    public async Task<IActionResult> AddToPlaylist(string id, [FromBody] string movieId) {}
+    public async Task<IActionResult> AddToPlaylist(string id, [FromBody] string movieId) {
+        await _mongoDBService.AddToPlaylistAsync(id, movieId);
+        return NoContent();
+    }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(string id) {}
+    public async Task<IActionResult> Delete(string id) {
+        await _mongoDBService.DeleteAsync(id);
+        return NoContent();
+    }
 
 }

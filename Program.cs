@@ -12,6 +12,10 @@ builder.Services.AddSingleton<MongoDBService>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Need to add controller support to the application since our API endpoints are defined in a controller class (PlaylistController)
+builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -25,6 +29,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapControllers();  // 
 
 var summaries = new[]
 {
